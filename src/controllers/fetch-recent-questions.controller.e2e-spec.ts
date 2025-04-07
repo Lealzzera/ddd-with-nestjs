@@ -5,7 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 
-describe("Create question (E2E)", () => {
+describe("Fetch recent questions (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let jwt: JwtService;
@@ -22,7 +22,7 @@ describe("Create question (E2E)", () => {
     await app.init();
   });
 
-  test("[POST] /questions", async () => {
+  test("[GET] /questions", async () => {
     const user = await prisma.user.create({
       data: {
         name: "John Doe",
@@ -33,22 +33,41 @@ describe("Create question (E2E)", () => {
 
     const accessToken = jwt.sign({ sub: user.id });
 
-    const response = await request(app.getHttpServer())
-      .post("/questions")
-      .set("Authorization", `Bearer ${accessToken}`)
-      .send({
-        title: "New Question",
-        content: "Question content",
-        authorId: user.id,
-      });
-
-    const questionOnDatabase = await prisma.question.findFirst({
-      where: {
-        title: "New Question",
-      },
+    await prisma.question.createMany({
+      data: [
+        {
+          title: "Question 01",
+          slug: "question-01",
+          content: "question content",
+          authorId: user.id,
+        },
+        {
+          title: "Question 02",
+          slug: "question-02",
+          content: "question content",
+          authorId: user.id,
+        },
+        {
+          title: "Question 03",
+          slug: "question-03",
+          content: "question content",
+          authorId: user.id,
+        },
+      ],
     });
 
-    expect(questionOnDatabase).toBeTruthy();
-    expect(response.statusCode).toBe(201);
+    const response = await request(app.getHttpServer())
+      .get("/questions")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send();
+
+    expect(response.body).toEqual({
+      questions: [
+        expect.objectContaining({ title: "Question 01" }),
+        expect.objectContaining({ title: "Question 02" }),
+        expect.objectContaining({ title: "Question 03" }),
+      ],
+    });
+    expect(response.statusCode).toBe(200);
   });
 });
