@@ -3,7 +3,6 @@ import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { hash } from "bcrypt";
 import z from "zod";
-import { create } from "domain";
 import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
 
 const createAccountBodySchema = z.object({
