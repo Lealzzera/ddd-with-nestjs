@@ -1,3 +1,7 @@
 {
-  "extends": "@rocketseat/eslint-config"
+  "extends": "@rocketseat/eslint-config",
+  "rules": {
+    "no-useless-constructor": "off",
+    "no-new": "off"
+  }
 }
