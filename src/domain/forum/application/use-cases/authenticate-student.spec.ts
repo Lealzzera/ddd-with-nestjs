@@ -1,14 +1,14 @@
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-respository";
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
-import { AuthenticateStudent } from "./authenticate-student";
+import { AuthenticateStudentUseCase } from "./authenticate-student";
 import { makeStudent } from "test/factories/make-student";
 
 let inMemoryStudentsRepository: InMemoryStudentsRepository;
 let fakeHasher: FakeHasher;
 let fakeEncrypter: FakeEncrypter;
 
-let sut: AuthenticateStudent;
+let sut: AuthenticateStudentUseCase;
 
 describe("Authenticate Student", () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe("Authenticate Student", () => {
     fakeHasher = new FakeHasher();
     fakeEncrypter = new FakeEncrypter();
 
-    sut = new AuthenticateStudent(
+    sut = new AuthenticateStudentUseCase(
       inMemoryStudentsRepository,
       fakeHasher,
       fakeEncrypter
