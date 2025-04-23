@@ -1,5 +1,4 @@
 import { BadRequestException, Controller, Get, Query } from "@nestjs/common";
-import { JwtAuthGuard } from "@/infra/auth/jwt-auth.guard";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import { z } from "zod";
 import { FetchRecentQuestionsUseCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
@@ -22,6 +21,7 @@ export class FetchRecentQuestionsController {
 
   @Get()
   async handle(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
+    console.log({ pagenumber: page });
     const result = await this.fetchRecentQuestions.execute({
       page,
     });
